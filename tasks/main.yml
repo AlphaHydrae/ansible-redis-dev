@@ -1,0 +1,13 @@
+---
+
+# Homebrew
+- name: brew install redis
+  homebrew: name=redis state=installed
+  become: true
+  become_user: "{{ redis_dev_brew_user }}"
+  when: ansible_pkg_mgr == 'homebrew'
+- name: brew services start redis
+  shell: su - {{ redis_dev_brew_user }} -c "{{ redis_dev_brew_bin }} services start redis"
+  register: result
+  changed_when: result.rc != 0
+  when: ansible_pkg_mgr == 'homebrew'

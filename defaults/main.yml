@@ -1,0 +1,3 @@
+---
+redis_dev_brew_user: "{{ user }}"
+redis_dev_brew_bin: /usr/local/bin/brew
