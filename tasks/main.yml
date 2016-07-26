@@ -1,13 +1,17 @@
 ---
 
-# Homebrew
-- name: brew install redis
+- name: Install Redis (Homebrew)
   homebrew: name=redis state=installed
   become: true
-  become_user: "{{ redis_dev_brew_user }}"
+  become_user: "{{ redis_dev_homebrew_user }}"
   when: ansible_pkg_mgr == 'homebrew'
-- name: brew services start redis
-  shell: su - {{ redis_dev_brew_user }} -c "{{ redis_dev_brew_bin }} services start redis"
+
+- name: Start Redis (Homebrew)
+  shell: su - {{ redis_dev_homebrew_user }} -c "{{ redis_dev_homebrew_bin }} services start redis"
   register: result
   changed_when: result.rc != 0
   when: ansible_pkg_mgr == 'homebrew'
+
+# Unsupported package managers
+- fail: msg="{{ ansible_pkg_mgr }} is not a supported package manager (Homebrew is supported)"
+  when: ansible_pkg_mgr != 'homebrew'
