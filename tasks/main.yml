@@ -6,11 +6,22 @@
   become_user: "{{ redis_dev_homebrew_user }}"
   when: ansible_pkg_mgr == 'homebrew'
 
-- name: Start Redis (Homebrew)
-  shell: su - {{ redis_dev_homebrew_user }} -c "{{ redis_dev_homebrew_bin }} services start redis"
-  register: result
-  changed_when: result.rc != 0
+- name: Check if Redis is started (Homebrew)
+  shell: "{{ redis_dev_homebrew_bin | quote }} services list | grep '^redis ' | grep started"
+  become: true
+  become_user: "{{ redis_dev_homebrew_user }}"
+  register: redis_dev_start_check_result
+  changed_when: false
+  failed_when: false
   when: ansible_pkg_mgr == 'homebrew'
+
+- name: Start Redis (Homebrew)
+  command: "{{ redis_dev_homebrew_bin | quote }} services start redis"
+  become: true
+  become_user: "{{ redis_dev_homebrew_user }}"
+  register: redis_dev_start_result
+  changed_when: redis_dev_start_result.rc != 0
+  when: ansible_pkg_mgr == 'homebrew' and redis_dev_start_check_result.rc != 0
 
 # Unsupported package managers
 - fail: msg="{{ ansible_pkg_mgr }} is not a supported package manager (Homebrew is supported)"
