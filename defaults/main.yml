@@ -1,3 +1,0 @@
----
-redis_dev_homebrew_user: "{{ homebrew_user | default(user) | default(omit) }}"
-redis_dev_homebrew_bin: "{{ homebrew_bin | default('/usr/local/bin/brew') }}"

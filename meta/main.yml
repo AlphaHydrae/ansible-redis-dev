@@ -12,4 +12,6 @@ galaxy_info:
   galaxy_tags:
     - redis
 
-dependencies: []
+dependencies:
+  - role: AlphaHydrae.homebrew-service
+    homebrew_service: redis
